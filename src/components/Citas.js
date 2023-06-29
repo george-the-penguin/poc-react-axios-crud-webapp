@@ -3,11 +3,14 @@ import axios from '../api/axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import { ReactComponent as PencilFill } from 'bootstrap-icons/icons/pencil-fill.svg';
 import { ReactComponent as XCircleFill } from 'bootstrap-icons/icons/x-circle-fill.svg';
+import { ReactComponent as PlusCircleFill } from 'bootstrap-icons/icons/plus-circle-fill.svg';
+import ErrorModal from './ErrorModal';
 
 
 const Citas = () => {
     const [citas, setCitas] = useState([]);
     const [citaToDelete, setCitaToDelete] = useState(null);
+    const [errorMessage, setErrorMessage] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -17,6 +20,7 @@ const Citas = () => {
                 setCitas(response.data);
             } catch (error) {
                 console.error("Error fetching data: ", error);
+                setErrorMessage(error.response?.data?.message || 'Error al obtener las citas');
             }
         };
 
@@ -36,6 +40,7 @@ const Citas = () => {
             setCitaToDelete(null);
         } catch (error) {
             console.error("Error deleting cita: ", error);
+            setErrorMessage(error.response?.data?.message || 'Error al obtener las citas');
         }
     };
 
@@ -43,9 +48,21 @@ const Citas = () => {
         setCitaToDelete(id);
     };
 
+    const handleCreate = () => {
+        navigate('/crear-cita');
+    };
+
+    const handleCloseErrorModal = () => {
+        setErrorMessage(null);
+    };
+
+
     return (
-        <div>
+        <div className="container">
             <h2>Citas</h2>
+            <div className="my-4">
+                <button className="btn btn-success" onClick={handleCreate}><PlusCircleFill/>Nueva Cita</button>
+            </div>
             <table className="table">
                 <thead>
                     <tr>
@@ -94,6 +111,7 @@ const Citas = () => {
                     </div>
                 </div>
             </div>
+            <ErrorModal errorMessage={errorMessage} onClose={handleCloseErrorModal} />
         </div>
     );
 }

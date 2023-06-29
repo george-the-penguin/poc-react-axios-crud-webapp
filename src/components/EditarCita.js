@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../api/axiosConfig';
 import { useNavigate, useParams } from 'react-router-dom';
+import ErrorModal from './ErrorModal';
 
 const EditarCita = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const [errorMessage, setErrorMessage] = useState(null);
     const [cita, setCita] = useState({
         id: "",
         nombre: "",
         dateTime: "",
         duracion: "",
         ubicacion: "",
-        detalles: "",
-        estado: ""
+        detalles: ""
     });
 
     useEffect(() => {
@@ -33,8 +34,17 @@ const EditarCita = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await axios.put(`/citas`, cita);
-        navigate('/');
+        try {
+            await axios.put(`/citas`, cita);
+            navigate('/');
+        }catch (error) {
+            console.error("Error updating cita: ", error);
+            setErrorMessage(error.response?.data?.message || 'Error al actualizar la cita');
+        }
+    };
+
+    const handleCloseErrorModal = () => {
+        setErrorMessage(null);
     };
 
     return (
@@ -98,6 +108,8 @@ const EditarCita = () => {
                 </div>
                 <button type="submit" className="btn btn-primary">Guardar Cambios</button>
             </form>
+
+            <ErrorModal errorMessage={errorMessage} onClose={handleCloseErrorModal} />
         </div>
     );
 };
