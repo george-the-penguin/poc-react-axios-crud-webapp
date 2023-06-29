@@ -1,58 +1,104 @@
 import React, { useState, useEffect } from 'react';
 import axios from '../api/axiosConfig';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const EditarCita = () => {
-    const [cita, setCita] = useState({ nombre: '', fecha: '', hora: '' });
-    const { id: citaId } = useParams(); // Utiliza el hook useParams
-    const navigate = useNavigate(); // Utiliza el hook useNavigate
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const [cita, setCita] = useState({
+        id: "",
+        nombre: "",
+        dateTime: "",
+        duracion: "",
+        ubicacion: "",
+        detalles: "",
+        estado: ""
+    });
 
     useEffect(() => {
         const fetchCita = async () => {
-            try {
-                const response = await axios.get(`/citas/${citaId}`);
-                setCita(response.data);
-            } catch (error) {
-                console.error("Error fetching data: ", error);
-            }
+            const response = await axios.get(`/citas/${id}`);
+            setCita(response.data);
         };
 
         fetchCita();
-    }, [citaId]);
+    }, [id]);
 
-    const handleChange = e => {
+    const handleChange = (e) => {
         setCita({
             ...cita,
             [e.target.name]: e.target.value
         });
     };
 
-    const handleSubmit = async e => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            await axios.put(`/citas/${citaId}`, cita);
-            navigate('/'); // Navega de regreso a la página principal
-        } catch (error) {
-            console.error("Error updating cita: ", error);
-        }
+        await axios.put(`/citas`, cita);
+        navigate('/');
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>
-                Nombre:
-                <input type="text" name="nombre" value={cita.nombre} onChange={handleChange} />
-            </label>
-            <label>
-                Fecha:
-                <input type="date" name="fecha" value={cita.fecha} onChange={handleChange} />
-            </label>
-            <label>
-                Hora:
-                <input type="time" name="hora" value={cita.hora} onChange={handleChange} />
-            </label>
-            <button type="submit">Actualizar Cita</button>
-        </form>
+        <div className="container">
+            <h1>Editar Cita</h1>
+            <form onSubmit={handleSubmit}>
+                <div className="mb-3">
+                    <label htmlFor="nombre" className="form-label">Nombre</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="nombre"
+                        name="nombre"
+                        value={cita.nombre}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="dateTime" className="form-label">Fecha y Hora</label>
+                    <input
+                        type="datetime-local"
+                        className="form-control"
+                        id="dateTime"
+                        name="dateTime"
+                        value={cita.dateTime}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="duracion" className="form-label">Duración (Horas)</label>
+                    <input
+                        type="number"
+                        className="form-control"
+                        id="duracion"
+                        name="duracion"
+                        value={cita.duracion}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="ubicacion" className="form-label">Ubicación</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="ubicacion"
+                        name="ubicacion"
+                        value={cita.ubicacion}
+                        onChange={handleChange}
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="detalles" className="form-label">Detalles</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="detalles"
+                        name="detalles"
+                        value={cita.detalles}
+                        onChange={handleChange}
+                    />
+                </div>
+                <button type="submit" className="btn btn-primary">Guardar Cambios</button>
+            </form>
+        </div>
     );
 };
 

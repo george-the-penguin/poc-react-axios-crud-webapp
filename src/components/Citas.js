@@ -1,8 +1,8 @@
-// src/components/Citas.js
-
 import React, { useEffect, useState } from 'react';
 import axios from '../api/axiosConfig';
-import { useNavigate } from 'react-router-dom'; // Importa el hook useHistory
+import { useNavigate } from 'react-router-dom';
+import { ReactComponent as PencilFill } from 'bootstrap-icons/icons/pencil-fill.svg';
+import { ReactComponent as XCircleFill } from 'bootstrap-icons/icons/x-circle-fill.svg';
 
 
 const Citas = () => {
@@ -12,7 +12,7 @@ const Citas = () => {
     useEffect(() => {
         const fetchCitas = async () => {
             try {
-                const response = await axios.get('/citas'); // reemplaza 'URL_DEL_API' con la URL de tu API
+                const response = await axios.get('/citas');
                 setCitas(response.data);
             } catch (error) {
                 console.error("Error fetching data: ", error);
@@ -35,23 +35,23 @@ const Citas = () => {
     return (
         <div>
             <h2>Citas</h2>
-            <table>
+            <table className="table">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Fecha</th>
-                        <th>Duración</th>
-                        <th>Ubicación</th>
-                        <th>Detalles</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
+                        <th scope="col">ID</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Duración</th>
+                        <th scope="col">Ubicación</th>
+                        <th scope="col">Detalles</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {citas.map(cita => (
                         <tr key={cita.id}>
-                            <td>{cita.id}</td>
+                            <th scope="row">{cita.id}</th>
                             <td>{cita.nombre}</td>
                             <td>{cita.dateTime}</td>
                             <td>{cita.duracion}</td>
@@ -59,8 +59,8 @@ const Citas = () => {
                             <td>{cita.detalles}</td>
                             <td>{cita.estado}</td>
                             <td>
-                                <button onClick={() => handleEdit(cita.id)}>Editar</button>
-                                <button onClick={() => handleDelete(cita.id)}>Eliminar</button>
+                                <button type="button" className="btn btn-primary me-2" onClick={() => handleEdit(cita.id)}><PencilFill/></button>
+                                <button type="button" className="btn btn-danger" onClick={() => handleDelete(cita.id)}><XCircleFill/></button>
                             </td>
                         </tr>
                     ))}
