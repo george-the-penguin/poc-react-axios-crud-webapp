@@ -22,16 +22,18 @@
  * SOFTWARE.
  */
 
-const reportWebVitals = onPerfEntry => {
-  if (onPerfEntry && onPerfEntry instanceof Function) {
-    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-      getCLS(onPerfEntry);
-      getFID(onPerfEntry);
-      getFCP(onPerfEntry);
-      getLCP(onPerfEntry);
-      getTTFB(onPerfEntry);
-    });
-  }
+import React from 'react';
+import './Footer.css';
+
+const Footer = () => {
+    return (
+        <footer>
+            <hr/>
+            <div className="footer-container">
+                <p>George the Penguin - 2023 (MIT License)</p>
+            </div>
+        </footer>
+    );
 };
 
-export default reportWebVitals;
+export default Footer;
