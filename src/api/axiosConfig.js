@@ -25,8 +25,11 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'http://localhost:8080/api'
+    baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080/api'
 });
+
+console.log("X:", process.env.REACT_APP_API_BASE_URL)
+console.log("API URL:", api.defaults.baseURL);
 
 api.interceptors.request.use((config) => {
     console.log('Enviando petición:', config);
